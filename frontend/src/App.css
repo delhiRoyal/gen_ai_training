@@ -1,0 +1,56 @@
+.App {
+    text-align: center;
+}
+.chat-container {
+    width: 500px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.chat-log {
+    height: 300px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+.message {
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+.user {
+    background-color: #DCF8C6; /* Light green */
+    text-align: right;
+}
+.assistant {
+    background-color: #ECECEC; /* Light gray */
+    text-align: left;
+}
+.loading{
+    background-color: #ECECEC;
+    text-align: left;
+}
+.error{
+    background-color: red;
+    color: white;
+    text-align: left;
+}
+.chat-input {
+    display: flex;
+}
+.chat-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+}
+.chat-input button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
