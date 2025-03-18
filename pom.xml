@@ -15,6 +15,7 @@
     <description>gen_ai_training</description>
     <properties>
         <java.version>17</java.version>
+        <semantic-kernel.version>1.4.0</semantic-kernel.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,26 +40,22 @@
         </dependency>
 
         <dependency>
-            <groupId>com.microsoft.semantic-kernel</groupId>
-            <artifactId>semantickernel-aiservices-openai</artifactId>
-            <version>1.4.2</version>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-ai-openai</artifactId>
+            <version>1.0.0-beta.14</version>
         </dependency>
+
         <dependency>
             <groupId>com.microsoft.semantic-kernel</groupId>
             <artifactId>semantickernel-api</artifactId>
-            <version>1.4.2</version>
+            <version>${semantic-kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>com.microsoft.semantic-kernel</groupId>
-            <artifactId>semantickernel-experimental</artifactId>
-            <version>1.4.2</version>
+            <artifactId>semantickernel-aiservices-openai</artifactId>
+            <version>${semantic-kernel.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.microsoft.semantic-kernel</groupId>
-            <artifactId>semantickernel-bom</artifactId>
-            <version>1.4.2</version>
-            <type>pom</type>
-        </dependency>
+
         <dependency>
             <groupId>io.qdrant</groupId>
             <artifactId>client</artifactId>
@@ -83,16 +80,6 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>4.29.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.semantic-kernel</groupId>
-            <artifactId>semantickernel-settings-loader</artifactId>
-            <version>0.2.13-alpha</version>
-        </dependency>
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-ai-openai</artifactId>
-            <version>1.0.0-beta.11</version>
         </dependency>
     </dependencies>
 
