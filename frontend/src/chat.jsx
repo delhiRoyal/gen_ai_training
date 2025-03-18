@@ -9,6 +9,14 @@ function Chat() {
         setMessage(event.target.value);
         setErrorMessage('');
     };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            handleSendMessage();
+        }
+    };
+
     const handleSendMessage = async () => {
         if (message.trim() === ''){
             setErrorMessage("Input prompt cannot be empty.");
@@ -45,7 +53,7 @@ function Chat() {
             <div className="chat-log">
                 {chatLog.map((msg, index) => (
                     <div key={index} className={`message ${msg.role}`}>
-                        {msg.content}
+                       <p> {msg.content} </p>
                     </div>
                 ))}
                 {isLoading && <div className="message loading">Loading...</div>}
@@ -56,6 +64,7 @@ function Chat() {
                     type="text"
                     value={message}
                     onChange={handleInputChange}
+                     onKeyDown={handleKeyDown}
                     placeholder="Enter your message"
                 />
                 <button onClick={handleSendMessage}>Send</button>
