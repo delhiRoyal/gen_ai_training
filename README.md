@@ -20,19 +20,7 @@ Before you begin, ensure you have the following installed:
     cd ${project-root-directory}/gen_ai_training/src/main/java/com/epam/training/gen/ai
     ```
 
-2.  **Configure Env variables:**
-
-    *   Edit Run configurations.
-    *   Add your OpenAI API key, endpoint and model deployment name as environment variables:
-
-        ```properties
-        # OpenAI
-        OPEN_AI_KEY=YOUR_OPENAI_API_KEY
-        OPEN_AI_ENDPOINT= your endpoint url
-        OPEN_AI_DEPLOYMENT_NAME=gpt-4 # or your deployment name
-        ```
-
-3.  **Build the Backend:**
+2. **Build the Backend:**
 
     ```bash
     mvn clean install
@@ -40,13 +28,15 @@ Before you begin, ensure you have the following installed:
 
     This command cleans the project, compiles the code, runs tests, and packages it into a JAR file.
 
-4.  **Run the Spring Boot Application:**
+3. **Run the Spring Boot Application:**
 
     ```bash
-    mvn spring-boot:run
+    mvn spring-boot:run -Dspring-boot.run.jvmArguments="-DOPEN_AI_KEY=YOUR_OPENAI_API_KEY -DOPEN_AI_ENDPOINT=your_endpoint_url"
     ```
-
-    This starts the Spring Boot application on port 8080 (by default). You should see logs in the console indicating that the application has started successfully.
+     *   Replace `YOUR_OPENAI_API_KEY`, `your_endpoint_url` with your actual OpenAI API key and endpoint.
+     *   This command starts the Spring Boot application on port 8080 (by default) and sets the necessary environment variables. You should see logs in the console indicating that the application has started successfully.
+     *   If you are using a different model, make sure you configure it properly.
+           This starts the Spring Boot application on port 8080 (by default). You should see logs in the console indicating that the application has started successfully.
 
 ## Frontend (React) Setup and Run
 
@@ -141,6 +131,76 @@ Here are some example prompts to test the chat history and context understanding
         Send an empty prompt.
         ```
         **Expected:** The frontend will display an error: "Input prompt cannot be empty."
+
+# Module 3
+
+### Selecting a Deployment & Temperature in Chat tab
+
+You can choose which AI model deployment to use for your chat interactions:
+
+1.  **Deployment Dropdown:**
+    *   In the "Chat" tab, you'll find a "Deployment" dropdown menu.
+    *   The available options are: `OpenAI`, `Mistral`, and `DeepSeek`.
+2.  **Select a Deployment:**
+    *   Choose the deployment you want to use from the dropdown.
+    *   All subsequent messages will be processed by the selected deployment.
+3.  **Temperature Input:**
+    *   In the "Chat" tab, you'll find a "Temperature" input field.
+    *   The temperature value ranges from `0` to `1`.
+4.  **Adjust the Value:**
+    *   Enter a value between `0` and `1` (e.g., `0.2`, `0.7`, `1.0`).
+    *   **Lower Temperature (closer to 0):** Results in more deterministic and focused responses.
+    *   **Higher Temperature (closer to 1):** Results in more creative and varied responses.
+
+
+### Using the Deployment Comparison Tab
+
+The "Comparison" tab allows you to compare the responses of different deployments side-by-side:
+
+1.  **Navigate to the Comparison Tab:**
+    *   Click on the "Comparison" tab in the application.
+2.  **Enter a Prompt:**
+    *   Type your prompt in the input field.
+3.  **Click "Compare":**
+    *   Click the "Compare" button.
+4.  **View the Results:**
+    *   The application will sequentially fetch responses from each deployment (`OpenAI`, `Mistral`, `DeepSeek`).
+    *   The responses will be displayed in separate boxes, allowing you to compare them.
+    *   The responses will be displayed one by one.
+
+### Using the Temperature Comparison Tab
+
+The "Temperature Comparison" tab allows you to compare the responses of a single selected deployment across different temperature settings (0, 0.5, and 1):
+
+1.  **Navigate to the Temperature Comparison Tab:**
+    *   Click on the "Temperature Comparison" tab in the application.
+
+2.  **Select a Deployment:**
+    *   Use the "Deployment" dropdown to choose the AI model you want to test (e.g., `OpenAI`, `Mistral`, `DeepSeek`).
+
+3.  **Enter a Prompt:**
+    *   Type your prompt in the input field.
+
+4.  **Click "Compare":**
+    *   Click the "Compare" button.
+
+5.  **View the Results:**
+    *   The application will sequentially fetch responses from the selected deployment for each temperature setting (0, 0.5, and 1).
+    *   The responses will be displayed in separate boxes, labeled with their respective temperatures.
+    *   The responses will be displayed one by one.
+    *   You can then compare how the temperature setting affects the output of the chosen AI model.
+
+**Understanding Temperature's Impact:**
+
+*   **Temperature 0:** This setting produces the most deterministic and focused responses. The AI will consistently choose the most likely next word or phrase.
+*   **Temperature 0.5:** This setting introduces some randomness, allowing for more variation in the responses while still maintaining a degree of focus.
+*   **Temperature 1:** This setting produces the most creative and varied responses. The AI is more likely to choose less probable words or phrases, leading to more surprising and diverse outputs.
+
+**Use Cases:**
+
+*   **Experimentation:** Use this tab to understand how temperature affects the output of different AI models.
+*   **Fine-Tuning:** Determine the optimal temperature setting for your specific use case.
+*   **Creativity vs. Accuracy:** Explore the trade-off between creative, varied responses and more focused, deterministic responses.
 
 ## Important Notes
 

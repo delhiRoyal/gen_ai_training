@@ -71,3 +71,95 @@
   color: red;
   margin-bottom: 10px;
 }
+.controls-container {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-top: 10px;
+    gap: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.control-group label {
+    color: white;
+    font-weight: bold;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    padding: 10px 20px;
+    background-color: #555;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    margin-right: 5px;
+}
+
+.tabs button.active {
+    background-color: #333;
+}
+
+.comparison-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 800px;
+    min-width: 800px;
+    background-color: #333;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.comparison-container h2 {
+    color: white;
+}
+
+.comparison-input {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.comparison-input-textarea {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+    resize: none; /* Prevent manual resizing */
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    font-family: inherit; /* Inherit font from parent */
+    min-height: 38px; /* Same height as the input */
+    border-radius: 5px;
+}
+
+.responses-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.response-box {
+    background-color: #6c757d;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    flex: 1;
+    min-width: 200px;
+}
+.response-content{
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}

@@ -4,11 +4,21 @@ function Chat() {
     const [chatLog, setChatLog] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [temperature, setTemperature] = useState(0.7);
+      const [selectedDeployment, setSelectedDeployment] = useState('openAI');
 
     const handleInputChange = (event) => {
         setMessage(event.target.value);
         setErrorMessage('');
     };
+
+    const handleTemperatureChange = (event) => {
+            setTemperature(parseFloat(event.target.value));
+        };
+
+    const handleDeploymentChange = (event) => {
+            setSelectedDeployment(event.target.value);
+        };
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' && !event.shiftKey) {
@@ -32,7 +42,11 @@ function Chat() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ input: message }),
+                body: JSON.stringify({
+                    input: message,
+                    temperature: temperature,
+                    deployment: selectedDeployment
+                }),
             });
             if (!response.ok) {
               const errorData = await response.json();
@@ -48,6 +62,7 @@ function Chat() {
             setIsLoading(false);
         }
     };
+
     return (
         <div className="chat-container">
             <div className="chat-log">
@@ -68,6 +83,30 @@ function Chat() {
                     placeholder="Enter your message"
                 />
                 <button onClick={handleSendMessage}>Send</button>
+            </div>
+            <div className="controls-container"> {/* Renamed outer div */}
+                <div className="control-group"> {/* Corrected class name */}
+                    <label htmlFor="temperature">Temperature:</label>
+                    <input
+                        type="number"
+                        id="temperature"
+                        name="temperature"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={temperature}
+                        onChange={handleTemperatureChange}
+                    />
+                </div>
+                <div className="control-group"> {/* Corrected class name */}
+                    <label htmlFor="deployment">Deployment:</label>
+                    <select id="deployment" value={selectedDeployment}
+                        onChange={handleDeploymentChange}>
+                        <option value="openAI">OpenAI</option>
+                        <option value="mistral">Mistral</option>
+                        <option value="deepseek">DeepSeek</option>
+                    </select>
+                </div>
             </div>
         </div>
     );

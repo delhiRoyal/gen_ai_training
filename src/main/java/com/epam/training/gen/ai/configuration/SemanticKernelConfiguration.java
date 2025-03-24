@@ -4,13 +4,11 @@ import com.azure.ai.openai.OpenAIAsyncClient;
 import com.epam.training.gen.ai.plugins.SimplePlugin;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
-import com.microsoft.semantickernel.orchestration.InvocationContext;
-import com.microsoft.semantickernel.orchestration.InvocationReturnMode;
-import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
 import com.microsoft.semantickernel.plugin.KernelPlugin;
 import com.microsoft.semantickernel.plugin.KernelPluginFactory;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
 import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +43,8 @@ public class SemanticKernelConfiguration {
      * @return an instance of {@link ChatCompletionService}
      */
     @Bean
-    public ChatCompletionService chatCompletionService(@Value("${client-openai-deployment-name}") String deploymentOrModelName,
+    @Qualifier("openAI")
+    public ChatCompletionService openAIChatCompletionService(@Value("${client-openai-deployment-name}") String deploymentOrModelName,
                                                        OpenAIAsyncClient openAIAsyncClient) {
         return OpenAIChatCompletion.builder()
                 .withModelId(deploymentOrModelName)
@@ -53,35 +52,26 @@ public class SemanticKernelConfiguration {
                 .build();
     }
 
-    /**
-     * Creates a {@link Kernel} bean to manage AI services and plugins.
-     *
-     * @param chatCompletionService the {@link ChatCompletionService} for handling completions
-     * @param kernelPlugin the {@link KernelPlugin} to be used in the kernel
-     * @return an instance of {@link Kernel}
-     */
     @Bean
-    public Kernel kernel(ChatCompletionService chatCompletionService, KernelPlugin kernelPlugin) {
-        return Kernel.builder()
-                .withAIService(ChatCompletionService.class, chatCompletionService)
-                .withPlugin(kernelPlugin)
+    @Qualifier("mistral")
+    public ChatCompletionService mistralCchatCompletionService(@Value("${client-mistral-deployment-name}") String deploymentOrModelName,
+                                                       OpenAIAsyncClient openAIAsyncClient) {
+        return OpenAIChatCompletion.builder()
+                .withModelId(deploymentOrModelName)
+                .withOpenAIAsyncClient(openAIAsyncClient)
                 .build();
     }
 
-    /**
-     * Creates an {@link InvocationContext} bean with default prompt execution settings.
-     *
-     * @return an instance of {@link InvocationContext}
-     */
     @Bean
-    public InvocationContext invocationContext() {
-        return InvocationContext.builder()
-                .withPromptExecutionSettings(PromptExecutionSettings.builder()
-                        .withTemperature(1.0)
-                        .build())
-                .withReturnMode(InvocationReturnMode.LAST_MESSAGE_ONLY)
+    @Qualifier("deepseek")
+    public ChatCompletionService deepSeekChatCompletionService(@Value("${client-deepseek-deployment-name}") String deploymentOrModelName,
+                                                               OpenAIAsyncClient openAIAsyncClient) {
+        return OpenAIChatCompletion.builder()
+                .withModelId(deploymentOrModelName)
+                .withOpenAIAsyncClient(openAIAsyncClient)
                 .build();
     }
+
 
     @Bean
     public ChatHistory chatHistory(){
