@@ -1,123 +1,115 @@
 package com.epam.training.gen.ai.controller;
 
+import com.epam.training.gen.ai.model.ChatRequest;
+import com.epam.training.gen.ai.model.ChatResponse;
 import com.epam.training.gen.ai.service.ChatBotService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+@WebMvcTest(ChatBotController.class)
+public class ChatBotControllerTest {
 
-@ExtendWith(MockitoExtension.class)
-class ChatBotControllerTest {
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private ChatBotService chatBotService;
 
-    @InjectMocks
-    private ChatBotController chatBotController;
-
     @Test
-    void chat_ValidPrompt_ReturnsOkResponse() throws Exception {
-        // Arrange
-        String prompt = "Hello";
-        String expectedResponse = "Hi there!";
-        when(chatBotService.getChatBotResponse(prompt)).thenReturn(expectedResponse);
+    public void testChatGetEndpoint() throws Exception {
+        String expectedResponse = "Test response";
+        when(chatBotService.getChatBotResponse(anyString(), anyDouble(), anyString())).thenReturn(expectedResponse);
 
-        // Act
-        ResponseEntity<Map<String, String>> responseEntity = chatBotController.chat(prompt);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/chat")
+                        .param("prompt", "Test prompt")
+                        .param("temperature", "0.5")
+                        .param("deployment", "mistral")) // Added deployment parameter
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
-        // Assert
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertEquals(expectedResponse, responseEntity.getBody().get("response"));
-        verify(chatBotService, times(1)).getChatBotResponse(prompt);
+        String content = result.getResponse().getContentAsString();
+        ChatResponse response = new ChatResponse(expectedResponse, null);
+        assertEquals(content, "{\"response\":\"Test response\",\"error\":null}");
     }
 
     @Test
-    void chat_ExceptionThrown_ReturnsInternalServerError() throws Exception {
-        // Arrange
-        String prompt = "Error";
-        when(chatBotService.getChatBotResponse(prompt)).thenThrow(new RuntimeException("Test exception"));
+    public void testChatPostEndpoint() throws Exception {
+        String expectedResponse = "Test response";
+        when(chatBotService.getChatBotResponse(anyString(), anyDouble(), anyString())).thenReturn(expectedResponse);
 
-        // Act
-        ResponseEntity<Map<String, String>> responseEntity = chatBotController.chat(prompt);
+        ChatRequest request = new ChatRequest("Test prompt", 0.5, "deepseek"); // Added deployment in request
+        String requestJson = "{\"input\":\"Test prompt\",\"temperature\":0.5,\"deployment\":\"deepseek\"}";
 
-        // Assert
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertTrue(responseEntity.getBody().get("error").contains("An error occurred"));
-        verify(chatBotService, times(1)).getChatBotResponse(prompt);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/chat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        assertEquals(content, "{\"response\":\"Test response\",\"error\":null}");
     }
 
     @Test
-    void chatPost_ValidRequest_ReturnsOkResponse() throws Exception {
-        // Arrange
-        Map<String, String> requestBody = Map.of("input", "How are you?");
-        String expectedResponse = "I'm good, thank you!";
-        when(chatBotService.getChatBotResponse(requestBody.get("input"))).thenReturn(expectedResponse);
+    public void testChatPostEndpoint_emptyInput() throws Exception {
+        ChatRequest request = new ChatRequest("", 0.5, "deepseek"); // Added deployment in request
+        String requestJson = "{\"input\":\"\",\"temperature\":0.5,\"deployment\":\"deepseek\"}";
 
-        // Act
-        ResponseEntity<Map<String, String>> responseEntity = chatBotController.chatPost(requestBody);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/chat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
 
-        // Assert
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertEquals(expectedResponse, responseEntity.getBody().get("response"));
-        verify(chatBotService, times(1)).getChatBotResponse(requestBody.get("input"));
+        String content = result.getResponse().getContentAsString();
+        assertEquals(content, "{\"response\":null,\"error\":\"Input prompt cannot be empty.\"}");
     }
 
     @Test
-    void chatPost_EmptyPrompt_ReturnsBadRequest() throws Exception {
-        // Arrange
-        Map<String, String> requestBody = Map.of("input", "");
+    public void testChatGetEndpoint_defaultDeployment() throws Exception {
+        String expectedResponse = "Test response";
+        when(chatBotService.getChatBotResponse(anyString(), anyDouble(), anyString())).thenReturn(expectedResponse);
 
-        // Act
-        ResponseEntity<Map<String, String>> responseEntity = chatBotController.chatPost(requestBody);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/chat")
+                        .param("prompt", "Test prompt")
+                        .param("temperature", "0.5"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertTrue(responseEntity.getBody().get("error").contains("Input prompt cannot be empty"));
-        verify(chatBotService, never()).getChatBotResponse(anyString());
+        String content = result.getResponse().getContentAsString();
+        ChatResponse response = new ChatResponse(expectedResponse, null);
+        assertEquals(content, "{\"response\":\"Test response\",\"error\":null}");
     }
 
     @Test
-    void chatPost_NullPrompt_ReturnsBadRequest() throws Exception {
-        // Arrange
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("input", null);
+    public void testChatPostEndpoint_defaultDeployment() throws Exception {
+        String expectedResponse = "Test response";
+        when(chatBotService.getChatBotResponse(anyString(), anyDouble(), anyString())).thenReturn(expectedResponse);
 
-        // Act
-        ResponseEntity<Map<String, String>> responseEntity = chatBotController.chatPost(requestBody);
+        ChatRequest request = new ChatRequest("Test prompt", 0.5, null); // Added deployment in request
+        String requestJson = "{\"input\":\"Test prompt\",\"temperature\":0.5}";
 
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertTrue(responseEntity.getBody().get("error").contains("Input prompt cannot be empty"));
-        verify(chatBotService, never()).getChatBotResponse(anyString());
-    }
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/chat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
-    @Test
-    void chatPost_ExceptionThrown_ReturnsInternalServerError() throws Exception {
-        // Arrange
-        Map<String, String> requestBody = Map.of("input", "Throw Exception");
-        when(chatBotService.getChatBotResponse(requestBody.get("input"))).thenThrow(new RuntimeException("Test Exception"));
-
-        // Act
-        ResponseEntity<Map<String, String>> responseEntity = chatBotController.chatPost(requestBody);
-
-        // Assert
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertTrue(responseEntity.getBody().get("error").contains("An error occurred"));
-        verify(chatBotService, times(1)).getChatBotResponse(requestBody.get("input"));
+        String content = result.getResponse().getContentAsString();
+        assertEquals(content, "{\"response\":\"Test response\",\"error\":null}");
     }
 }

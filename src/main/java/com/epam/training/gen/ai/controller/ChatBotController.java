@@ -1,12 +1,12 @@
 package com.epam.training.gen.ai.controller;
 
+import com.epam.training.gen.ai.model.ChatRequest;
+import com.epam.training.gen.ai.model.ChatResponse;
 import com.epam.training.gen.ai.service.ChatBotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -21,26 +21,30 @@ public class ChatBotController {
     }
 
     @GetMapping("/chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestParam String prompt) {
+    public ResponseEntity<ChatResponse> chat(
+            @RequestParam String prompt,
+            @RequestParam(required = false) Double temperature,
+            @RequestParam(required = false, defaultValue = "openAI") String deployment) { // Added deployment parameter
         try {
-            String response = chatBotService.getChatBotResponse(prompt);
-            return ResponseEntity.ok(Map.of("response", response));
+            String response = chatBotService.getChatBotResponse(prompt, temperature, deployment);
+            return ResponseEntity.ok(new ChatResponse(response, null));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "An error occurred: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ChatResponse(null, "An error occurred: " + e.getMessage()));
         }
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<Map<String, String>> chatPost(@RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<ChatResponse> chatPost(@RequestBody ChatRequest request) {
         try {
-            String prompt = requestBody.get("input");
-            if (prompt == null || prompt.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Input prompt cannot be empty."));
+            if (request.getInput() == null || request.getInput().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(new ChatResponse(null, "Input prompt cannot be empty."));
             }
-            String response = chatBotService.getChatBotResponse(prompt);
-            return ResponseEntity.ok(Map.of("response", response));
+            // Default to "openAI" if deployment is not provided
+            String deployment = request.getDeployment() == null ? "openAI" : request.getDeployment();
+            String response = chatBotService.getChatBotResponse(request.getInput(), request.getTemperature(), deployment);
+            return ResponseEntity.ok(new ChatResponse(response, null));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "An error occurred: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ChatResponse(null, "An error occurred: " + e.getMessage()));
         }
     }
 }
