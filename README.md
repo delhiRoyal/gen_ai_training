@@ -202,6 +202,29 @@ The "Temperature Comparison" tab allows you to compare the responses of a single
 *   **Fine-Tuning:** Determine the optimal temperature setting for your specific use case.
 *   **Creativity vs. Accuracy:** Explore the trade-off between creative, varied responses and more focused, deterministic responses.
 
+# Module 4
+
+Please use the chat tab in the frontend application for this module.
+
+### Testing the Age Calculator Plugin
+* Prompt:
+    ```
+    Calculate my age if I was born on 1990-05-15.
+    ```
+  **Expected:** The AI should respond with the calculated age (e.g., "33" or "34", depending on the current date).
+* Prompt:
+    ```
+    Calculate my age if I was born on 01 January 2000.
+   ```
+  **Expected:** The AI should respond with the calculated age.
+
+### Testing the Weather Plugin:
+* Prompt:
+    ```
+    What is the current weather in London?
+    ```
+  **Expected:** The AI should respond with the current weather in London (e.g., "The current weather in London is: Cloudy, 15°C.").
+
 ## Important Notes
 
 *   **CORS:** The backend is configured to allow requests from `http://localhost:5173` (see `ChatBotController.java`). If you change the frontend's port, update the `@CrossOrigin` annotation accordingly.
