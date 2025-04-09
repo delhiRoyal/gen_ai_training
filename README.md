@@ -11,6 +11,7 @@ Before you begin, ensure you have the following installed:
 *   **Node.js (with npm):** Required for running the React frontend. It's recommended to use the latest LTS version of Node.js.
 *   **OpenAI Account and API Key:** You need an active OpenAI account and a valid API key to use the AI model.
 *   **Text Editor/IDE:** (e.g., VS Code, IntelliJ IDEA) for editing code.
+*   **Docker & Docker Compose:** Installed and running to manage the Qdrant vector database.
 
 ## Backend (Spring Boot) Setup and Run
 
@@ -61,6 +62,16 @@ Before you begin, ensure you have the following installed:
     ```
 
     This starts the React development server on `http://localhost:5173`.
+
+## Qdrant Setup and Run
+
+1. **Start Docker Engine**
+    
+2. **Start Qdrant Database:**
+   Use Docker Compose to start the Qdrant service defined in `docker-compose.yml`:
+    ```
+   bash docker-compose up -d
+   ```
 
 ## Accessing the Application
 
@@ -224,6 +235,35 @@ Please use the chat tab in the frontend application for this module.
     What is the current weather in London?
     ```
   **Expected:** The AI should respond with the current weather in London (e.g., "The current weather in London is: Cloudy, 15°C.").
+
+# Module 5
+
+### Testing the Embeddings Endpoints
+1. Create and Store an Embedding
+    ```
+   curl -X POST -H "Content-Type: application/json"
+    -d '{"text": "The quick brown fox jumps over the lazy dog."}'
+    http://localhost:8080/embedding/build-and-store
+   ```
+   ```
+   curl -X POST -H "Content-Type: application/json"
+    -d '{"text": "A fast, dark-colored mammal leaps above a sleepy canine."}'
+    http://localhost:8080/embedding/build-and-store
+   ```
+   Check the application logs and the response from `curl` to ensure the requests were successful.
+
+2. Search for Similar Embeddings
+    ```
+   curl -X POST -H "Content-Type: application/json"
+    -d '{"text": "agile fox", "limit": 2}'
+    http://localhost:8080/embedding/search
+   ```
+3. Create an Embedding from a text
+    ```
+   curl -X POST -H "Content-Type: application/json"
+    -d '{"text": "The quick brown fox jumps over the lazy dog."}'
+    http://localhost:8080/embedding/build
+   ```
 
 ## Important Notes
 

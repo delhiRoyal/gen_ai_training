@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### qdrant_storage
+qdrant_storage/
