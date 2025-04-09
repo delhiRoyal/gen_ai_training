@@ -1,7 +1,9 @@
 package com.epam.training.gen.ai.configuration;
 
 import com.azure.ai.openai.OpenAIAsyncClient;
+import com.epam.training.gen.ai.plugins.AgeCalculatorPlugin;
 import com.epam.training.gen.ai.plugins.SimplePlugin;
+import com.epam.training.gen.ai.plugins.WeatherPlugin;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
 import com.microsoft.semantickernel.plugin.KernelPlugin;
@@ -50,6 +52,18 @@ public class SemanticKernelConfiguration {
                 .withModelId(deploymentOrModelName)
                 .withOpenAIAsyncClient(openAIAsyncClient)
                 .build();
+    }
+
+    @Bean
+    @Qualifier("ageCalculator")
+    public KernelPlugin ageCalculatorKernelPlugin(AgeCalculatorPlugin ageCalculatorPlugin) {
+        return KernelPluginFactory.createFromObject(ageCalculatorPlugin, "AgeCalculatorPlugin");
+    }
+
+    @Bean
+    @Qualifier("weather")
+    public KernelPlugin weatherKernelPlugin(WeatherPlugin weatherPlugin) {
+        return KernelPluginFactory.createFromObject(weatherPlugin, "WeatherPlugin");
     }
 
     @Bean

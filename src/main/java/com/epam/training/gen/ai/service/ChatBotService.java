@@ -5,6 +5,7 @@ import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.orchestration.InvocationContext;
 import com.microsoft.semantickernel.orchestration.InvocationReturnMode;
 import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
+import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
 import com.microsoft.semantickernel.plugin.KernelPlugin;
 import com.microsoft.semantickernel.services.chatcompletion.AuthorRole;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
@@ -38,7 +39,12 @@ public class ChatBotService {
     private ChatHistory chatHistory;
 
     @Autowired
-    private KernelPlugin kernelPlugin;
+    @Qualifier("ageCalculator")
+    private KernelPlugin ageCalculatorPlugin;
+
+    @Autowired
+    @Qualifier("weather")
+    private KernelPlugin weatherPlugin;
 
 
     @Autowired
@@ -57,7 +63,7 @@ public class ChatBotService {
         log.info("Creating InvocationContext with temperature: {}, deployment: {}", temperature, deployment);
         InvocationContext invocationContext = invocationContext(temperature == null ? defaultTemperature : temperature);
         ChatCompletionService chatCompletionService = chatCompletionServices.get(deployment);
-        Kernel kernel = kernel(chatCompletionService, kernelPlugin);
+        Kernel kernel = kernel(chatCompletionService);
 
         try {
             log.info("getChatBotResponse  prompt {} ", prompt);
@@ -105,6 +111,7 @@ public class ChatBotService {
                         .withTemperature(temperature)
                         .build())
                 .withReturnMode(InvocationReturnMode.LAST_MESSAGE_ONLY)
+                .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(true))
                 .build();
     }
 
@@ -112,13 +119,13 @@ public class ChatBotService {
      * Creates a {@link Kernel} bean to manage AI services and plugins.
      *
      * @param chatCompletionService the {@link ChatCompletionService} for handling completions
-     * @param kernelPlugin the {@link KernelPlugin} to be used in the kernel
      * @return an instance of {@link Kernel}
      */
-    public Kernel kernel(ChatCompletionService chatCompletionService, KernelPlugin kernelPlugin) {
+    public Kernel kernel(ChatCompletionService chatCompletionService) {
         return Kernel.builder()
                 .withAIService(ChatCompletionService.class, chatCompletionService)
-                .withPlugin(kernelPlugin)
+                .withPlugin(ageCalculatorPlugin)
+                .withPlugin(weatherPlugin)
                 .build();
     }
 }
