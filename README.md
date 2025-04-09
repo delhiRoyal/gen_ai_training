@@ -264,6 +264,7 @@ Please use the chat tab in the frontend application for this module.
     -d '{"text": "The quick brown fox jumps over the lazy dog."}'
     http://localhost:8080/embedding/build
    ```
+   Check the application logs and the response from `curl` to ensure the requests were successful.
 
 ## Important Notes
 
