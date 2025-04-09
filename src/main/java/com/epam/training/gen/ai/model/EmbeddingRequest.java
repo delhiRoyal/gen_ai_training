@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmbeddingRequest {
-    private String text;
 
+    private String text;
     private int limit = 3;
+
 }

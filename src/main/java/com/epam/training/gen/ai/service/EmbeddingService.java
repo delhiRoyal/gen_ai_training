@@ -127,8 +127,7 @@ public class EmbeddingService {
             return;
         }
         log.info("Creating collection: {}", COLLECTION_NAME);
-        Collections.CollectionOperationResponse result = null;
-            result = qdrantClient.createCollectionAsync(COLLECTION_NAME,
+        Collections.CollectionOperationResponse result = qdrantClient.createCollectionAsync(COLLECTION_NAME,
                             Collections.VectorParams.newBuilder()
                                     .setDistance(Collections.Distance.Cosine)
                                     .setSize(ADA_002_MODEL_DIMENSION_SIZE)
@@ -147,7 +146,7 @@ public class EmbeddingService {
                 .setCollectionName(COLLECTION_NAME)
                 .setQuery(nearest(queryEmbeddings))
                 //.setWithPayload(enable(true))
-               // .setWithVectors(WithVectorsSelectorFactory.enable(true))
+                .setWithVectors(WithVectorsSelectorFactory.enable(true))
                 .setLimit(limit)
                 .build()
 

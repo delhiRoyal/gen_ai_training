@@ -13,7 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchResult {
+
     private float score;
     private String uuid;
     private List<Float> embeddingPoints;
+
 }

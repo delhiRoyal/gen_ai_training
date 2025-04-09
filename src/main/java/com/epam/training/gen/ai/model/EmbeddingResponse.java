@@ -11,6 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmbeddingResponse {
+
     private List<EmbeddingItem> embedding;
     private String error;
+
 }

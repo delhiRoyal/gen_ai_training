@@ -29,7 +29,8 @@ public class EmbeddingController {
     public ResponseEntity<EmbeddingResponse> buildEmbedding(@RequestBody EmbeddingRequest request) {
         try {
             if (request.getText() == null || request.getText().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body(new EmbeddingResponse(null, "Input text cannot be empty."));
+                return ResponseEntity.badRequest()
+                        .body(new EmbeddingResponse(null, "Input text cannot be empty."));
             }
             List<EmbeddingItem> embedding = embeddingService.buildEmbedding(request.getText());
             return ResponseEntity.ok(new EmbeddingResponse(embedding, null));

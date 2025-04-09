@@ -10,7 +10,9 @@ public class QDrantConfiguration {
 
     @Bean
     public QdrantClient qdrantClient() {
-        return new QdrantClient(QdrantGrpcClient.newBuilder("localhost", 6334, false).build());
+        return new QdrantClient(QdrantGrpcClient.newBuilder(
+                "localhost", 6334, false)
+                .build());
     }
 
 }
