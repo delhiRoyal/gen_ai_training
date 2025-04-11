@@ -1,0 +1,62 @@
+# Application configuration
+application-name: gen_ai_training
+
+client-openai-key: ${OPEN_AI_KEY}
+client-openai-endpoint: ${OPEN_AI_ENDPOINT}
+
+client-openai-deployment-name: gpt-4
+client-mistral-deployment-name: rlab-mistral-instruct
+client-deepseek-deployment-name: DeepSeek-R1-Distill-Qwen-14B
+
+openai:
+  embedding:
+    deployment: text-embedding-ada-002
+
+# Default temperature for the chatbot
+DEFAULT_TEMPERATURE: 1.0 # YAML prefers explicit types
+
+# Logging levels
+logging:
+  level:
+    com.azure: DEBUG
+    com.microsoft.semantickernel: DEBUG
+    com.epam.training.gen.ai: DEBUG
+    root: INFO
+
+# Qdrant Configuration
+qdrant:
+  host: localhost
+  port: 6333
+  apiKey: YOUR_QDRANT_API_KEY # Optional
+
+# RAG
+rag:
+  search:
+    limit: 2
+  prompt:
+    template: |
+      Based on the following context:
+      ---
+      %s
+      ---
+      Answer the following question: %s
+      If the context doesn't provide the answer, say you don't have information about that topic.
+  hyde:
+    template: |
+      Given the question '{%s}', generate a hypothetical document that directly answers this question.
+      The document should be detailed and in-depth.
+      The document size should be approximately {%d} characters. And the response should not contain anything except the document text.
+  enhance-query:
+    template: |
+      You are an AI assistant tasked with reformulating user queries to improve retrieval in a RAG system.
+      Given the original query, rewrite it to be more specific, detailed, and likely to retrieve relevant information.
+      Original query: {%s}
+      Rewritten query:
+
+# Embedding and Chunking Configuration
+embedding:
+  chunk:
+    size: 5000
+    sentence_end_tolerance: 1000
+  openai:
+    deployment: text-embedding-ada-002

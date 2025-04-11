@@ -266,6 +266,46 @@ Please use the chat tab in the frontend application for this module.
    ```
    Check the application logs and the response from `curl` to ensure the requests were successful.
 
+# Module 6
+
+## Testing the RAG (Retrieval-Augmented Generation) Feature
+
+This feature allows the chatbot to answer questions based on the content of documents you upload. The system extracts text, creates embeddings, stores them in Qdrant, and retrieves relevant chunks to augment the AI's response generation.
+
+**Testing Steps:**
+
+1.  **Navigate to the Chat Tab:**
+    *   Ensure you are on the main **Chat** tab in the frontend application (`http://localhost:5173`).
+
+2.  **Upload a Document:**
+    *   Locate the file upload section within the Chat tab (look for a button like "Upload File" or an upload icon).
+    *   Click the upload button and select a document (e.g., PDF, DOCX) to upload.
+    *   **Suggestion:** You can use the sample PDF files located in the backend project's test resources directory: `src/test/resources/data/`.
+
+3.  **Wait for Processing:**
+    *   After selecting the file, the frontend will send it to the backend.
+    *   The backend will then:
+        *   Extract text from the document.
+        *   Chunk the text.
+        *   Generate embeddings for each chunk using the configured OpenAI model.
+        *   Store the chunks and their embeddings in the Qdrant vector database.
+    *   This process might take a few moments, especially for larger files. Look for a confirmation message in the UI (e.g., "File uploaded and processed successfully") or check the backend console logs for progress information (e.g., "Stored embedding for chunk...", "Embedding process completed").
+
+4.  **Ask Questions Based on the Document:**
+    *   Once the document is processed and embeddings are stored, you can ask questions specifically related to the content of the uploaded file in the chat input box.
+
+**Example Prompts for RAG Testing:**
+
+*(Note: The effectiveness of these prompts depends heavily on the actual content of the PDF/DOCX file you upload. Use questions relevant to your chosen test document.)*
+
+*   **Examples:**
+  * PerkPlus.pdf -> What is covered under the PerksPlus?
+  * Benefits_Options.pdf -> what is Northwind Health Plus?
+
+**Expected Behavior:**
+
+The chatbot should provide answers that are clearly derived from the content of the document you uploaded. It should retrieve relevant text chunks from Qdrant and use them to formulate an informed response, rather than relying solely on its general pre-trained knowledge. If you ask about something *only* present in the document, the RAG feature should enable the bot to answer correctly.
+
 ## Important Notes
 
 *   **CORS:** The backend is configured to allow requests from `http://localhost:5173` (see `ChatBotController.java`). If you change the frontend's port, update the `@CrossOrigin` annotation accordingly.

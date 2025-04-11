@@ -6,9 +6,13 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'http://localhost:8080', // Your Spring Boot server address
+                target: 'http://localhost:8080',
                 changeOrigin: true
             },
+            '/rag': {
+                target: 'http://localhost:8080',
+                changeOrigin: true
+            }
         },
     },
 });
