@@ -11,6 +11,7 @@ public class ChatRequest {
     private String input;
     private Double temperature;
     private String deployment;
+    private String sourceFilename;
 
 
     public ChatRequest(String input) {
@@ -22,4 +23,9 @@ public class ChatRequest {
         this.temperature = temperature;
     }
 
+    public ChatRequest(String input, Double temperature, String deployment) {
+        this.input = input;
+        this.temperature = temperature;
+        this.deployment = deployment;
+    }
 }

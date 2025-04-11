@@ -30,6 +30,25 @@
     word-wrap: break-word;
     white-space: pre-wrap;
 }
+
+.message.system {
+    background-color: #4a4a4a;
+    color: #e0e0e0;
+    align-self: center;
+    text-align: center;
+    font-style: italic;
+    border: 1px solid #666;
+    max-width: 80%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.message.system p {
+    text-align: center;
+}
+
 .user {
     background-color: #007bff;
     color: white;
@@ -53,7 +72,7 @@
 .chat-input {
     display: flex;
 }
-.chat-input input {
+.chat-input textarea {
     flex-grow: 1;
     padding: 8px;
     border: 1px solid #ccc;
@@ -138,10 +157,10 @@
     padding: 8px;
     border: 1px solid #ccc;
     margin-right: 5px;
-    resize: none; /* Prevent manual resizing */
-    overflow-y: hidden; /* Hide vertical scrollbar */
-    font-family: inherit; /* Inherit font from parent */
-    min-height: 38px; /* Same height as the input */
+    resize: none;
+    overflow-y: hidden;
+    font-family: inherit;
+    min-height: 38px;
     border-radius: 5px;
 }
 
@@ -162,4 +181,64 @@
 .response-content{
     word-wrap: break-word;
     white-space: pre-wrap;
+}
+
+.file-upload-section .upload-status.success,
+.file-upload-section .upload-status.error,
+.file-upload-section .rag-active-indicator {
+    color: white;
+    margin-top: 8px;
+    font-size: 0.9em;
+    display: block;
+}
+
+.file-upload-section .upload-status.error {
+    color: #ffdddd;
+ }
+
+ .file-upload-section h3 {
+     color: white;
+     margin-bottom: 10px;
+ }
+
+ .file-upload-section input[type="file"] {
+    color: #ccc;
+    margin-right: 10px;
+ }
+
+ .file-upload-section .active-file-indicator {
+     color: white; /* Make the text white */
+     margin-top: 10px; /* Add some space above it */
+     font-size: 0.9em;
+     padding: 5px;
+     background-color: #444; /* Optional: Add a subtle background */
+     border-radius: 4px;
+     display: inline-block; /* Adjust display if needed */
+     margin-left: 10px; /* Space from upload button */
+ }
+
+ .file-upload-section .active-file-indicator .clear-button {
+     background: none;
+     border: none;
+     color: #ffdddd; /* Light red */
+     cursor: pointer;
+     margin-left: 8px;
+     font-size: 1.1em;
+     padding: 0 5px;
+     vertical-align: middle;
+     line-height: 1; /* Adjust line height */
+ }
+
+ .file-upload-section .active-file-indicator .clear-button:hover {
+     color: #ff8888; /* Brighter red on hover */
+ }
+
+hr.section-separator {
+    border: none;
+    border-top: 1px solid #ccc;
+    height: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
 }
