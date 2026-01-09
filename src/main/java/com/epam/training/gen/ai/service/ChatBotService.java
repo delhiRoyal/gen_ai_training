@@ -32,7 +32,6 @@ public class ChatBotService {
     @Value("${DEFAULT_TEMPERATURE}")
     private Double defaultTemperature;
 
-
     private final Map<String, ChatCompletionService> chatCompletionServices = new HashMap<>();
 
     @Autowired
@@ -57,8 +56,12 @@ public class ChatBotService {
         chatCompletionServices.put("deepseek", deepSeekChatCompletionService);
     }
 
-
     public String getChatBotResponse(String prompt, Double temperature, String deployment) {
+        return getChatBotResponse(prompt, temperature, deployment, chatHistory);
+    }
+
+
+    public String getChatBotResponse(String prompt, Double temperature, String deployment, ChatHistory chatHistory) {
         chatHistory.addUserMessage(prompt);
         log.info("Creating InvocationContext with temperature: {}, deployment: {}", temperature, deployment);
         InvocationContext invocationContext = invocationContext(temperature == null ? defaultTemperature : temperature);
